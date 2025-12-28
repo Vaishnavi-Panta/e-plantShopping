@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeItem, updateQuantity } from './CartSlice';
+import { addItem, removeItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
 
 const CartItem = ({ onContinueShopping }) => {
@@ -30,14 +30,9 @@ const CartItem = ({ onContinueShopping }) => {
     alert('Functionality to be added for future reference');
   };
 
-  // Increase quantity
+  // ✅ Increase quantity using addItem
   const handleIncrement = (item) => {
-    dispatch(
-      updateQuantity({
-        name: item.name,
-        quantity: item.quantity + 1,
-      })
-    );
+    dispatch(addItem(item));
   };
 
   // Decrease quantity or remove item
@@ -54,9 +49,9 @@ const CartItem = ({ onContinueShopping }) => {
     }
   };
 
-  // Remove plant from cart
+  // ✅ Remove item completely from cart
   const handleRemove = (item) => {
-    dispatch(removeItem(item.name));
+    dispatch(removeItem(item.name)); // as per hint
   };
 
   // Calculate subtotal for an individual item

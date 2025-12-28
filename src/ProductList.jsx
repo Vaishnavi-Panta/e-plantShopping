@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from '../redux/CartSlice'; // adjust path if needed
 import './ProductList.css';
 import CartItem from './CartItem';
@@ -11,13 +11,23 @@ function ProductList({ onHomeClick }) {
 
   const dispatch = useDispatch();
 
-  // ✅ Add to Cart functionality (Redux + local state)
+  // ✅ Access cart items from Redux store
+  const cartItems = useSelector(state => state.cart.items);
+
+  // ✅ Calculate total quantity of items in cart
+  const calculateTotalQuantity = () => {
+    return cartItems
+      ? cartItems.reduce((total, item) => total + item.quantity, 0)
+      : 0;
+  };
+
+  // ✅ Add to Cart functionality
   const handleAddToCart = (plant) => {
-    dispatch(addItem(plant)); // Add plant to global cart (Redux)
+    dispatch(addItem(plant));
 
     setAddedToCart((prevState) => ({
       ...prevState,
-      [plant.name]: true, // Mark plant as added
+      [plant.name]: true,
     }));
   };
 
@@ -89,6 +99,7 @@ function ProductList({ onHomeClick }) {
 
   return (
     <div>
+      {/* NAVBAR */}
       <div className="navbar" style={styleObj}>
         <div className="luxury">
           <img
@@ -106,11 +117,12 @@ function ProductList({ onHomeClick }) {
             Plants
           </a>
           <a href="#" onClick={handleCartClick} style={styleA}>
-            🛒
+            🛒 ({calculateTotalQuantity()})
           </a>
         </div>
       </div>
 
+      {/* PLANT LISTING */}
       {showPlants && !showCart && (
         <div className="product-grid">
           {plantsArray.map((category, index) => (
@@ -142,6 +154,7 @@ function ProductList({ onHomeClick }) {
         </div>
       )}
 
+      {/* CART */}
       {showCart && (
         <CartItem onContinueShopping={handleContinueShopping} />
       )}
